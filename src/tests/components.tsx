@@ -5,6 +5,7 @@ import { withHooks, useEffect, useState, useDomContext, useDomContextState, useR
 import * as HooksAPI from '../stencil-hooks';
 import { mockFunction } from './mockFunction';
 import { setImplementation } from '@saasquatch/universal-hooks';
+import { WithStencilHooks } from '../decorator';
 setImplementation(HooksAPI);
 
 @Component({
@@ -415,5 +416,56 @@ export class InnocentChild {
 
   disconnectedCallback() {
     window['lifecycleCalls']('child.disconnectedCallback');
+  }
+}
+
+
+
+
+
+
+
+@Component({
+  tag: 'decorated-component-test',
+})
+@WithStencilHooks()
+export class DecoratedComponentTest {
+  constructor() {
+    window['lifecycleCalls'] = window['lifecycleCalls'] || mockFunction();
+    withHooks(this);
+  }
+  render() {
+    const [count, setCount] = useState(0);
+    window['lifecycleCalls']('render');
+
+    this.foo();
+
+    return (
+      <Host onClick={()=>setCount(10)}>
+        <div>{count}</div>
+      </Host>
+    );
+  }
+  connectedCallback() {
+    window['lifecycleCalls']('connectedCallback');
+  }
+
+  foo(){}
+
+  disconnectedCallback() {
+    window['lifecycleCalls']('disconnectedCallback');
+  }
+}
+
+
+@Component({
+  tag: 'decorated-component-test-fail',
+})
+// @ts-expect-error dupa
+@WithStencilHooks()
+export class DecoratedComponentTestFail {
+  constructor() {
+    window['lifecycleCalls'] = window['lifecycleCalls'] || mockFunction();
+    withHooks(this);
   }
 }

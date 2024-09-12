@@ -228,6 +228,23 @@ describe('stencil-context', () => {
   });
 });
 
+  it('renders correctly with decorator', async () => {
+    const page = await newE2EPage();
+    const errorRef = trackErrors(page);
+
+    await page.setContent('<decorated-component-test></decorated-component-test>');
+    const component = await page.find('decorated-component-test > div');
+    await component.click();
+    expect(component.innerHTML).toEqualHtml(`10`);
+    expect(errorRef.current).toEqual([]);
+  });
+
+  it('fails with missing lifecycle methods', async () => {
+
+
+
+  });
+
 function trackErrors(page: E2EPage) {
   const ref = new MutableRef<string[]>([]);
   page.on('pageerror', ({ message }) => (ref.current = [message, ...ref.current]));

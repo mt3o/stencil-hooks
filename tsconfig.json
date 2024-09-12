@@ -16,7 +16,8 @@
     "jsxFactory": "h"
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/@stencil/core/compiler/lib.decorators.d.ts"
   ],
   "exclude": [
     "node_modules"
